@@ -1,30 +1,37 @@
 package ru.geekbrains.gdxgame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Anim {
+
+    private TextureAtlas atlas;
 
     private Texture img;
     private Animation<TextureRegion> anim;
     private float time;
 
-    public Anim(String name, int col, int row, Animation.PlayMode palyMode) {
-        img = new Texture(name);
-        TextureRegion region0 = new TextureRegion(img);
-        int xCnt = region0.getRegionWidth() / 9;
-        int yCnt = region0.getRegionHeight() / 6;
-        TextureRegion[][] regions0 = region0.split(xCnt, yCnt);
-        TextureRegion[] region1 = new TextureRegion[regions0.length * regions0[0].length];
-        int cnt = 0;
-        for (int i = 0; i < regions0.length; i++) {
-            for (int j = 0; j < regions0[0].length; j++) {
-                region1[cnt++] = regions0[i][j];
-            }
-        }
-        anim = new com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>(1 / 15f, region1);
-        anim.setPlayMode(Animation.PlayMode.LOOP);
+    public Anim(String name, int col, int row, Animation.PlayMode playMode) {
+//        img = new Texture(name);
+//        TextureRegion region0 = new TextureRegion(img);
+//        int xCnt = region0.getRegionWidth() / col;
+//        int yCnt = region0.getRegionHeight() / row;
+//        TextureRegion[][] regions0 = region0.split(xCnt, yCnt);
+//        TextureRegion[] region1 = new TextureRegion[regions0.length * regions0[0].length];
+//        int cnt = 0;
+//        for (int i = 0; i < regions0.length; i++) {
+//            for (int j = 0; j < regions0[0].length; j++) {
+//                region1[cnt++] = regions0[i][j];
+//            }
+//        }
+        atlas = new TextureAtlas("atlas/atlaspack.atlas");
+        anim = new com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>(1 / 15f, atlas.findRegions("girl"));
+        anim.setPlayMode(playMode);
+
+        time += Gdx.graphics.getDeltaTime();
     }
 
     public TextureRegion getFrame() {
@@ -48,6 +55,7 @@ public class Anim {
     }
 
     public void dispose() {
-        img.dispose();
+//        img.dispose();
+        atlas.dispose();
     }
 }
