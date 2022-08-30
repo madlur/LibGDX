@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.9" tiledversion="1.9.1" orientation="orthogonal" renderorder="right-down" width="80" height="29" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="3">
+ <tileset firstgid="1" name="monochrome_tilemap" tilewidth="16" tileheight="16" spacing="1" tilecount="400" columns="20">
+  <image source="monochrome_tilemap.png" width="339" height="339"/>
+  <tile id="131">
+   <animation>
+    <frame tileid="163" duration="100"/>
+    <frame tileid="164" duration="100"/>
+    <frame tileid="165" duration="100"/>
+   </animation>
+  </tile>
+  <tile id="378">
+   <animation>
+    <frame tileid="369" duration="100"/>
+    <frame tileid="370" duration="100"/>
+   </animation>
+  </tile>
+ </tileset>
+ <layer id="1" name="фон" width="80" height="29">
+  <data encoding="base64" compression="zlib">
+   eJztmFlOwzAQhsMb2xHYjgCUI7DdidfchysyCFmyRv8/i2lUO8knjapMbdfj5WvVaVo33yq+zv6CPddxaur51fNEr6gG3Uc/R9D90Jz0e5nxl4TV7p0DtNaoXWYObN+s+Z2a7HxRrejMZOrz9gCd/cz+LAmr3VoXVC/zQARrz9h69uQ/bw0iZ4H1ieA5Dp27zPi6XnbnWmrx5onC8nrL+fP2yJpbloif2HeiNZ61PmxcVE9vftd4Lmfr2YMreoCdA3anevqu6gHvXrF71NNdmtXzhcSlxJXEtcQ5ya2RzL7cSNxK3EncV/k69wDaldzW0OfsUeJJ4lniUOXr3AtoV3Jb4VPiVeJN4j3QvrT7AH3r3FbQDvPYsv+y6Dv9y+6/GKP7L/ubmnko6jVvvMIo/sv+f8E8FPEauqeMUfyH/guwYB4qOYRuF2Gt/mMeKjmEbhdhFP9lObb/GKP4rxB103/8l/nMEfzX4pIW/yG8viP4r8UlLf5DlL6MEfyXdck8Hcd/c9WXsbT/PA/tOTvneWjP2TnPQ3vOzv0AcPAh3A==
+  </data>
+ </layer>
+ <objectgroup id="3" name="объекты">
+  <object id="1" name="камера" x="642.43" y="247.096">
+   <point/>
+  </object>
+  <object id="2" name="граница" x="-2.66667" y="0" width="1285.33" height="464"/>
+ </objectgroup>
+ <layer id="2" name="Слой 2" width="80" height="29">
+  <data encoding="base64" compression="zlib">
+   eJztwzEJAAAMA7D6V1kpFbFrkEASAAAAAAAAAKCeAn8NAj1GAQ==
+  </data>
+ </layer>
+</map>
