@@ -27,8 +27,8 @@ public class Anim {
 //                region1[cnt++] = regions0[i][j];
 //            }
 //        }
-        atlas = new TextureAtlas("atlas/atlaspack.atlas");
-        anim = new com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>(1 / 15f, atlas.findRegions("girl"));
+        atlas = new TextureAtlas(name);
+        anim = new com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>(1 / 15f, atlas.findRegions("RunRight"));
         anim.setPlayMode(playMode);
 
         time += Gdx.graphics.getDeltaTime();

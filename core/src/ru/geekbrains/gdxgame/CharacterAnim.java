@@ -64,7 +64,7 @@ public class CharacterAnim extends Anim {
     }
 
     public void checkChangingOfDirection() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) setDirectionLeft(true);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) setDirectionLeft(false);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) setDirectionLeft(true);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) setDirectionLeft(false);
     }
 }
