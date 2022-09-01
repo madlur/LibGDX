@@ -9,7 +9,7 @@ public class MainClass extends Game {
 
     @Override
     public void create() {
-        Gdx.graphics.setWindowedMode(1300, 600);
+        Gdx.graphics.setWindowedMode(500, 300);
         setScreen(new MenuScreen(this));
     }
 
