@@ -3,9 +3,12 @@ package ru.geekbrains.gdxgame.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -18,6 +21,8 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import ru.geekbrains.gdxgame.CharacterAnim;
 import ru.geekbrains.gdxgame.MainClass;
 import ru.geekbrains.gdxgame.PhysX;
+
+import java.util.ArrayList;
 
 
 public class GameScreen implements Screen {
@@ -34,9 +39,14 @@ public class GameScreen implements Screen {
     private final int[] l1;
     private Body body;
     private final Rectangle heroRect;
+    private final Music music;
+    private final Sound sound;
+    public static ArrayList<Body> bodies;
+    public static boolean onGround;
 
 
     public GameScreen(MainClass game) {
+        bodies = new ArrayList<>();
         this.game = game;
         this.batch = new SpriteBatch();
         this.character = new CharacterAnim();
@@ -62,6 +72,12 @@ public class GameScreen implements Screen {
         for (int i = 0; i < obj.size; i++) {
             physX.addObject(obj.get(i));
         }
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("game_sound.mp3"));
+        music.setLooping(true);
+        music.play();
+
+        sound = Gdx.audio.newSound(Gdx.files.internal("step_sound.mp3"));
     }
 
     @Override
@@ -71,16 +87,20 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+        sound.play(1,1f,0);
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             body.applyForceToCenter(new Vector2(-10000, 0), true);
-            character.serReverse(true);
+            character.setReverse(true);
+
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             body.applyForceToCenter(new Vector2(10000, 0), true);
             character.setReverse(false);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) camera.position.y += STEP;
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && onGround) {
+            body.applyForceToCenter(new Vector2(0, 500000), true);
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) camera.position.y -= STEP;
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) camera.zoom += 0.01f;
@@ -94,8 +114,6 @@ public class GameScreen implements Screen {
 
         mapRenderer.setView(camera);
         mapRenderer.render(bg);
-
-        System.out.println(body.getLinearVelocity());
 
         batch.setProjectionMatrix(camera.combined);
         heroRect.x = body.getPosition().x - heroRect.width / 2;
@@ -113,6 +131,11 @@ public class GameScreen implements Screen {
 
         physX.step();
         physX.debugDraw(camera);
+
+        for (int i = 0; i < bodies.size(); i++) {
+            physX.destroyBody(bodies.get(i));
+        }
+        bodies.clear();
     }
 
     @Override
@@ -140,5 +163,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         this.batch.dispose();
         this.physX.dispose();
+        this.sound.dispose();
+        this.music.dispose();
     }
 }
