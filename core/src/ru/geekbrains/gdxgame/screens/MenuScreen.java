@@ -3,6 +3,8 @@ package ru.geekbrains.gdxgame.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,6 +24,8 @@ public class MenuScreen implements Screen {
 
     private Rectangle startRect;
     private ShapeRenderer shapeRenderer;
+    private final Music music;
+    private final Sound sound;
 
     public MenuScreen(MainClass game) {
         this.game = game;
@@ -32,6 +36,14 @@ public class MenuScreen implements Screen {
                 Gdx.graphics.getHeight() / 2f - img.getHeight() / 2f,
                 img.getWidth(), img.getHeight());
         shapeRenderer = new ShapeRenderer();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("intro.mp3"));
+        music.setLooping(true);
+        music.play();
+
+        sound = Gdx.audio.newSound(Gdx.files.internal("notify_1.mp3"));
+
+
     }
 
     @Override
@@ -64,7 +76,11 @@ public class MenuScreen implements Screen {
                 dispose();
                 game.setScreen(new GameScreen(game));
             }
+            else {
+                sound.play();
+            }
         }
+
     }
 
     @Override
@@ -89,8 +105,10 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        img.dispose();
-        shapeRenderer.dispose();
+        this.batch.dispose();
+        this.img.dispose();
+        this.shapeRenderer.dispose();
+        this.music.dispose();
+        this.sound.dispose();
     }
 }
