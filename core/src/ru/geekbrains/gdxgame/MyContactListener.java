@@ -1,6 +1,5 @@
 package ru.geekbrains.gdxgame;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.*;
 import ru.geekbrains.gdxgame.screens.GameScreen;
 
@@ -10,7 +9,7 @@ public class MyContactListener implements ContactListener {
         Fixture a = contact.getFixtureA();
         Fixture b = contact.getFixtureB();
 
-        if(a.getUserData() != null && b.getUserData() != null) {
+        if (a.getUserData() != null && b.getUserData() != null) {
             String tmpA = (String) a.getUserData();
             String tmpB = (String) b.getUserData();
 
@@ -26,6 +25,19 @@ public class MyContactListener implements ContactListener {
             if (tmpB.equals("legs") && tmpA.equals("ground")) {
                 GameScreen.onGround = true;
             }
+            if (tmpA.equals("hero") && tmpB.equals("win")) {
+                GameScreen.isWin = true;
+            }
+            if (tmpB.equals("hero") && tmpA.equals("win")) {
+                GameScreen.isWin = true;
+            }
+            if (tmpA.equals("hero") && tmpB.equals("lose")) {
+                GameScreen.isDie = true;
+            }
+            if (tmpB.equals("hero") && tmpA.equals("lose")) {
+                GameScreen.isDie = true;
+            }
+
 
         }
 
@@ -42,11 +54,9 @@ public class MyContactListener implements ContactListener {
 
             if (tmpA.equals("legs") && tmpB.equals("ground")) {
                 GameScreen.onGround = false;
-                Gdx.app.log("endContact", "between " + tmpA.toString() + " and " + tmpB.toString());
             }
             if (tmpA.equals("legs") && !tmpB.equals("ground")) {
                 GameScreen.onGround = false;
-                Gdx.app.log("endContact", "between " + tmpA.toString() + " and " + tmpB.toString());
             }
         }
     }
