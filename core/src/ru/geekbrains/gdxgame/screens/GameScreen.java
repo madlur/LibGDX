@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -43,6 +42,8 @@ public class GameScreen implements Screen {
     private final Sound sound;
     public static ArrayList<Body> bodies;
     public static boolean onGround;
+    public static boolean isWin = false;
+    public static boolean isDie = false;
 
 
     public GameScreen(MainClass game) {
@@ -51,6 +52,7 @@ public class GameScreen implements Screen {
         this.batch = new SpriteBatch();
         this.character = new CharacterAnim();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom = 0.6f;
 
         map = new TmxMapLoader().load("map/new_map.tmx");
         mapRenderer = new OrthogonalTiledMapRenderer(map);
@@ -87,7 +89,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        sound.play(1,1f,0);
+        sound.play(1, 1f, 0);
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             body.applyForceToCenter(new Vector2(-10000, 0), true);
             character.setReverse(true);
@@ -98,7 +100,7 @@ public class GameScreen implements Screen {
             character.setReverse(false);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.W) && onGround) {
-            body.applyForceToCenter(new Vector2(0, 500000), true);
+            body.applyForceToCenter(new Vector2(0, 400000), true);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) camera.position.y -= STEP;
@@ -136,6 +138,17 @@ public class GameScreen implements Screen {
             physX.destroyBody(bodies.get(i));
         }
         bodies.clear();
+
+        if (isWin) {
+            isWin = false;
+            dispose();
+            game.setScreen(new WinScreen(game));
+        }
+        if (isDie) {
+            isDie = false;
+            dispose();
+            game.setScreen(new GameOverScreen(game));
+        }
     }
 
     @Override
