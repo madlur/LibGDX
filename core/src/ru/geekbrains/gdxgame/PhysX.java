@@ -9,11 +9,12 @@ import com.badlogic.gdx.physics.box2d.*;
 public class PhysX {
     private final World world;
     private final Box2DDebugRenderer debugRenderer;
+    public final float PPM = 1;
 
     public PhysX() {
         world = new World(new Vector2(0.0f, -9.81f), true);
-        debugRenderer = new Box2DDebugRenderer();
         world.setContactListener(new MyContactListener());
+        debugRenderer = new Box2DDebugRenderer();
     }
 
     public Body addObject(RectangleMapObject object) {
@@ -26,8 +27,8 @@ public class PhysX {
         if (type.equals("StaticBody")) def.type = BodyDef.BodyType.StaticBody;
         if (type.equals("DynamicBody")) def.type = BodyDef.BodyType.DynamicBody;
 
-        def.position.set(rect.x + rect.width/2.0f, rect.y + rect.height/2.0f);
-        polygonShape.setAsBox(rect.width/2.0f, rect.height/2.0f);
+        def.position.set(rect.x + rect.width/2.0f/PPM, rect.y + rect.height/2.0f/PPM);
+        polygonShape.setAsBox(rect.width/2.0f/PPM, rect.height/2.0f/PPM);
         fdef.shape = polygonShape;
 
         def.gravityScale = (float) object.getProperties().get("gravityScale");
@@ -43,7 +44,7 @@ public class PhysX {
         body.createFixture(fdef).setUserData(name);
 
         if(name != null && name.equals("hero")) {
-            polygonShape.setAsBox(rect.width/4.0f, rect.height/12.0f, new Vector2(0.0f,-rect.width/2.0f), 0.0f);
+            polygonShape.setAsBox(rect.width/2.0f/PPM, rect.height/12.0f/PPM, new Vector2(0.0f,-rect.width/2.0f/PPM), 0.0f);
             body.createFixture(fdef).setUserData("legs");
             body.getFixtureList().get(body.getFixtureList().size - 1).setSensor(true);
         }

@@ -7,17 +7,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Anim {
 
-    private TextureAtlas atlas;
-
-    private Animation<TextureRegion> anim;
+    private final TextureAtlas atlas;
+    private final Animation<TextureRegion> anim;
     private float time;
 
     public Anim(String path, String name, Animation.PlayMode playMode) {
         atlas = new TextureAtlas(path);
-        anim = new com.badlogic.gdx.graphics.g2d.Animation<TextureRegion>(1 / 15f, atlas.findRegions(name));
+        anim = new Animation<TextureRegion>(1/15f, atlas.findRegions(name));
         anim.setPlayMode(playMode);
 
-        time += Gdx.graphics.getDeltaTime();
+        time = 0;
     }
 
     public TextureRegion getFrame() {

@@ -3,6 +3,7 @@ package ru.geekbrains.gdxgame.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,7 @@ public class GameOverScreen implements Screen {
     private Texture img;
     private float menuX;
     private float menuY;
+    private final Music music;
 
     private Rectangle startRect;
     private ShapeRenderer shapeRenderer;
@@ -31,6 +33,9 @@ public class GameOverScreen implements Screen {
                 Gdx.graphics.getHeight() / 2f - img.getHeight() / 2f,
                 img.getWidth(), img.getHeight());
         shapeRenderer = new ShapeRenderer();
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("the_end.mp3"));
+        music.play();
     }
 
     @Override
