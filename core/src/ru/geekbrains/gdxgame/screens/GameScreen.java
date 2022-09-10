@@ -15,9 +15,10 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import ru.geekbrains.gdxgame.CharacterAnim;
+import ru.geekbrains.gdxgame.units.HeroAnim;
 import ru.geekbrains.gdxgame.MainClass;
 import ru.geekbrains.gdxgame.PhysX;
 
@@ -28,20 +29,22 @@ public class GameScreen implements Screen {
 
     private MainClass game;
     private SpriteBatch batch;
-    private CharacterAnim character;
+    private HeroAnim character;
     private OrthographicCamera camera;
     private TiledMap map;
     private OrthogonalTiledMapRenderer mapRenderer;
     private static final float STEP = 12f;
+    private final float MOVE_POWER = 20000f;
+    private final float JUMP_POWER = 400000f;
     private PhysX physX;
     private final int[] bg;
     private final int[] l1;
     private Body body;
     private final Rectangle heroRect;
     private final Music music;
-    private final Sound sound;
+//    private final Sound sound;
     public static ArrayList<Body> bodies;
-    public static boolean onGround;
+    public static boolean  onGround;
     public static boolean isWin = false;
     public static boolean isDie = false;
 
@@ -49,8 +52,8 @@ public class GameScreen implements Screen {
     public GameScreen(MainClass game) {
         bodies = new ArrayList<>();
         this.game = game;
-        this.batch = new SpriteBatch();
-        this.character = new CharacterAnim();
+        batch = new SpriteBatch();
+        character = new HeroAnim();
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.zoom = 0.6f;
 
@@ -79,7 +82,7 @@ public class GameScreen implements Screen {
         music.setLooping(true);
         music.play();
 
-        sound = Gdx.audio.newSound(Gdx.files.internal("step_sound.mp3"));
+//        sound = Gdx.audio.newSound(Gdx.files.internal("step_sound.mp3"));
     }
 
     @Override
@@ -89,27 +92,27 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        sound.play(1, 1f, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            body.applyForceToCenter(new Vector2(-10000, 0), true);
+//        sound.play(1, 1f, 0);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            body.applyForceToCenter(new Vector2(-MOVE_POWER, 0), true);
             character.setReverse(true);
 
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            body.applyForceToCenter(new Vector2(10000, 0), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            body.applyForceToCenter(new Vector2(MOVE_POWER, 0), true);
             character.setReverse(false);
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.W) && onGround) {
-            body.applyForceToCenter(new Vector2(0, 400000), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && onGround) {
+            body.applyForceToCenter(new Vector2(0, JUMP_POWER), true);
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) camera.position.y -= STEP;
+
 
         if (Gdx.input.isKeyPressed(Input.Keys.P)) camera.zoom += 0.01f;
         if (Gdx.input.isKeyPressed(Input.Keys.O) && camera.zoom > 0) camera.zoom -= 0.01f;
 
-        camera.position.x = body.getPosition().x;
-        camera.position.y = body.getPosition().y;
+        camera.position.x = body.getPosition().x * physX.PPM;
+        camera.position.y = body.getPosition().y * physX.PPM;
         camera.update();
 
         ScreenUtils.clear(Color.BLACK);
@@ -117,11 +120,18 @@ public class GameScreen implements Screen {
         mapRenderer.setView(camera);
         mapRenderer.render(bg);
 
-        batch.setProjectionMatrix(camera.combined);
-        heroRect.x = body.getPosition().x - heroRect.width / 2;
-        heroRect.y = body.getPosition().y - heroRect.height / 2;
+        Rectangle tmp = character.getRect(camera, character.getFrame());
+        ((PolygonShape)body.getFixtureList().get(0).getShape()).setAsBox(tmp.width/2/physX.PPM*camera.zoom, tmp.height/2/ physX.PPM*camera.zoom);
+        ((PolygonShape)body.getFixtureList().get(1).getShape()).setAsBox(
+                tmp.width/4/physX.PPM*camera.zoom,
+                tmp.height/12/physX.PPM*camera.zoom,
+                new Vector2(0,-tmp.height/2/physX.PPM*camera.zoom),
+                0);
+
+        character.setTime(Gdx.graphics.getDeltaTime());
+
         batch.begin();
-        batch.draw(character.getFrame(), heroRect.x, heroRect.y, heroRect.width, heroRect.height);
+        batch.draw(character.getFrame(), tmp.x, tmp.y, tmp.width, tmp.height);
         batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -176,7 +186,8 @@ public class GameScreen implements Screen {
     public void dispose() {
         this.batch.dispose();
         this.physX.dispose();
-        this.sound.dispose();
-        this.music.dispose();
+        this.character.dispose();
+        this.mapRenderer.dispose();
+        music.dispose();
     }
 }
